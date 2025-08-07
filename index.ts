@@ -1,7 +1,14 @@
 import express, { Express, Request, Response } from "express"
+// ENV
+import dotenv from "dotenv"
+dotenv.config()
 
 const app: Express = express()
 const port: number = 3000
+
+// Database connect
+import { connect } from "./config/database"
+connect()
 
 // Views
 app.set("views", `${__dirname}/views`); // Tìm đến thư mục tên là views
