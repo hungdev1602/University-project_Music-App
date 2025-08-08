@@ -3,6 +3,8 @@ import express, { Express, Request, Response } from "express"
 import dotenv from "dotenv"
 dotenv.config()
 
+import { Topic } from "./models/client/topic.model"
+
 const app: Express = express()
 const port: number = 3000
 
@@ -16,7 +18,13 @@ app.set("view engine", "pug") // template engine sử dụng: pug
 // End Views
 
 
-app.get("/topics", (req: Request, res: Response) => {
+app.get("/topics", async (req: Request, res: Response) => {
+  const topics = await Topic.find({
+    deleted: false
+  })
+
+  console.log(topics)
+
   res.render("client/pages/topics/index")
 })
 
