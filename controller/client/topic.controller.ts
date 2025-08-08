@@ -6,7 +6,10 @@ export const index = (async (req: Request, res: Response) => {
     deleted: false
   })
 
+  console.log(topics)
+
   res.render("client/pages/topics/index", {
-    pageTitle: "Topics song"
+    pageTitle: "Song topics",
+    topics: topics
   })
 })
