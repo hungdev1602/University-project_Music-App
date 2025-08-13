@@ -62,3 +62,44 @@ export const songDetail = async (req: Request, res: Response) => {
     topic: topic
   })
 }
+
+export const likePatch = async (req: Request, res: Response) => {
+  const { songId, status } = req.body
+
+  const song = await Song.findOne({
+    _id: songId,
+    status: "active",
+    deleted: false
+  })
+
+  if(song){
+    let updateLike = song.like
+    switch (status) {
+      case "increase":
+        updateLike++
+        break;
+      case "decrease":
+        updateLike--
+        break;
+      default:
+        break;
+    }
+
+    await Song.updateOne({
+      _id: songId,
+      status: "active",
+      deleted: false
+    }, {
+      like: updateLike
+    })
+    res.json({
+      message: "success",
+      like: updateLike
+    })
+  }
+  else{
+    res.json({
+      message: "error"
+    })
+  }
+}
