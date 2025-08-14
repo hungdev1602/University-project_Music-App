@@ -63,3 +63,27 @@ if(likeButton){
   })
 }
 // Hết Tính năng like
+
+// Tính năng yêu thích bài hát
+const buttonFavorite = document.querySelector(".inner-actions [button-favorite]")
+
+if(buttonFavorite){
+  buttonFavorite.addEventListener("click", () => {
+    const songId = buttonFavorite.getAttribute("button-favorite")
+    
+    buttonFavorite.classList.toggle("active")
+
+    fetch("/songs/favorite", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        songId: songId
+      })
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+  })
+}
+// Hết tính năng yêu thích bài hát
