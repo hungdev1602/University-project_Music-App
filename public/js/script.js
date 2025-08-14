@@ -65,25 +65,28 @@ if(likeButton){
 // Hết Tính năng like
 
 // Tính năng yêu thích bài hát
-const buttonFavorite = document.querySelector(".inner-actions [button-favorite]")
+const buttonFavorite = document.querySelectorAll("[button-favorite]")
 
-if(buttonFavorite){
-  buttonFavorite.addEventListener("click", () => {
-    const songId = buttonFavorite.getAttribute("button-favorite")
-    
-    buttonFavorite.classList.toggle("active")
+if(buttonFavorite.length > 0){
+  buttonFavorite.forEach(button => {
+    button.addEventListener("click", () => {
+      const songId = button.getAttribute("button-favorite")
+      
+      button.classList.toggle("active")
 
-    fetch("/songs/favorite", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        songId: songId
+      fetch("/songs/favorite", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          songId: songId
+        })
       })
+      .then(res => res.json())
+      .then(data => console.log(data))
     })
-    .then(res => res.json())
-    .then(data => console.log(data))
   })
+  
 }
 // Hết tính năng yêu thích bài hát

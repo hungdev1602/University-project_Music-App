@@ -3,7 +3,7 @@ import { Topic } from "../../models/client/topic.model"
 import { Song } from "../../models/client/song.model"
 import { Singer } from "../../models/client/singer.model"
 import { FavoriteSong } from "../../models/client/favorite-song.model"
-
+import moment from "moment"
 export const listSongByTopic = async (req: Request, res: Response) => {
   const slugTopic: string = req.params.slugTopic
   const topic = await Topic.findOne({
@@ -140,5 +140,34 @@ export const favoritePatch = async (req: Request, res: Response) => {
 
   res.json({
     message: "success"
+  })
+}
+
+export const favoriteGet = async (req: Request, res: Response) => {
+  const favoriteSongs = await FavoriteSong.find()
+
+  for (const song of favoriteSongs) {
+    const info = await Song.findOne({
+      _id: song.songId,
+      status: "active",
+      deleted: false
+    })
+
+    const singer = await Singer.findOne({
+      _id: info.singerId,
+      status: "active",
+      deleted: false
+    })
+
+    song["title"] = info.title
+    song["avatar"] = info.avatar
+    song["like"] = info.like
+    song["singerFullName"] = singer ? singer.fullName : ""
+    song["createdAtFormatted"] = moment(song.createdAt).format("DD/MM/YYYY")
+  }
+  
+  res.render("client/pages/songs/favorite", {
+    pageTitle: "Favorite songs",
+    songs: favoriteSongs
   })
 }
