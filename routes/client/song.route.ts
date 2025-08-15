@@ -13,4 +13,6 @@ router.get("/favorite", controller.favoriteGet)
 
 router.get("/:slugTopic", controller.listSongByTopic)
 
+router.get("/search/result", controller.search)
+
 export const songRoute = router

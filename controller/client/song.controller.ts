@@ -4,6 +4,8 @@ import { Song } from "../../models/client/song.model"
 import { Singer } from "../../models/client/singer.model"
 import { FavoriteSong } from "../../models/client/favorite-song.model"
 import moment from "moment"
+import unidecode from "unidecode"
+
 export const listSongByTopic = async (req: Request, res: Response) => {
   const slugTopic: string = req.params.slugTopic
   const topic = await Topic.findOne({
@@ -169,5 +171,36 @@ export const favoriteGet = async (req: Request, res: Response) => {
   res.render("client/pages/songs/favorite", {
     pageTitle: "Favorite songs",
     songs: favoriteSongs
+  })
+}
+
+export const search = async (req: Request, res: Response) => {
+  const keyword = `${req.query.keyword}`
+
+  let keywordRegex = keyword.trim() //bỏ khoảng trắng 2 đầu
+  keywordRegex = keywordRegex.replace(/\s+/g, "-") //bỏ khoảng trắng giữa các chữ và thay thế sang dấu -
+  keywordRegex = unidecode(keywordRegex) //bỏ dấu trong tiếng việt
+  
+  const songs = await Song.find({
+    slug: new RegExp(keywordRegex, "i"), //tìm theo slug
+    status: "active",
+    deleted: false
+  }).select("slug avatar title like singerId")
+
+
+  for (const song of songs) {
+    const infoSinger = await Singer.findOne({
+      _id: song.singerId,
+      status: "active",
+      deleted: false
+    })
+
+    song["singerFullName"] = infoSinger ? infoSinger.fullName : ""
+  }
+
+  res.render("client/pages/songs/search", {
+    pageTitle: `Search for ${keyword}`,
+    keyword: keyword,
+    songs: songs
   })
 }
