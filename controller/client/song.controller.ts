@@ -178,10 +178,28 @@ export const search = async (req: Request, res: Response) => {
   const type = req.params.type
   const keyword = `${req.query.keyword}`
 
+  if (!keyword.trim()) {
+    if (type === "result") {
+      return res.render("client/pages/songs/search", {
+        pageTitle: `Search for ${keyword}`,
+        keyword: keyword,
+        songs: []
+      });
+    } else if (type === "suggest") {
+      return res.json({
+        code: "success",
+        message: "OK",
+        songs: []
+      });
+    }
+  }
+
   let keywordRegex = keyword.trim() //bỏ khoảng trắng 2 đầu
   keywordRegex = keywordRegex.replace(/\s+/g, "-") //bỏ khoảng trắng giữa các chữ và thay thế sang dấu -
   keywordRegex = unidecode(keywordRegex) //bỏ dấu trong tiếng việt
-  
+
+  const songFinal = []
+
   const songs = await Song.find({
     slug: new RegExp(keywordRegex, "i"), //tìm theo slug
   }).select("slug avatar title like singerId")
@@ -194,21 +212,27 @@ export const search = async (req: Request, res: Response) => {
       deleted: false
     })
 
-    song["singerFullName"] = infoSinger ? infoSinger.fullName : ""
+    songFinal.push({
+      title: song.title,
+      avatar: song.avatar,
+      slug: song.slug,
+      singerFullName: infoSinger ? infoSinger.fullName : "",
+      like: song.like
+    })
   }
 
   if(type === "result"){
     res.render("client/pages/songs/search", {
       pageTitle: `Search for ${keyword}`,
       keyword: keyword,
-      songs: songs
+      songs: songFinal
     })
   }
   else if(type === "suggest"){
     res.json({
       code: "success",
       message: "OK",
-      songs: songs
+      songs: songFinal
     })
   }
 }

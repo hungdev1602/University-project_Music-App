@@ -101,8 +101,8 @@ if(inputBox){
       .then(res => res.json())
       .then(data => {
         if(data.code == "success"){
+          const innerSuggest = document.querySelector(".box-search .inner-suggest")
           const innerList = document.querySelector(".box-search .inner-list")
-          console.log(data)
           if(data.songs.length > 0){
             const htmls = data.songs.map(item => {
               return `
@@ -113,17 +113,18 @@ if(inputBox){
                 <div class="inner-info">
                   <div class="inner-title">${item.title}</div>
                   <div class="inner-singer">
-                    <i class="fa-solid fa-microphone-lines"></i> Tăng duy tân
+                    <i class="fa-solid fa-microphone-lines"></i> ${item.singerFullName}
                   </div>
                 </div>
               </a>
               `
             })
+            innerSuggest.classList.add("show")
             innerList.innerHTML = htmls.join("")
           }
           else{
+            innerSuggest.classList.remove("show")
             innerList.innerHTML = ""
-            console.log("OK")
           }
         }
       })
