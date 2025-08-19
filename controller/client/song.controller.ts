@@ -236,3 +236,26 @@ export const search = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const listenPatch = async (req: Request, res: Response) => {
+  const songId = req.params.songId
+
+  const song = await Song.findOne({
+    _id: songId,
+    status: "active",
+    deleted: false
+  })
+
+  await Song.updateOne({
+    _id: songId,
+    status: "active",
+    deleted: false
+  }, {
+    listen: song.listen + 1
+  })
+
+  res.json({
+    code: "success",
+    listen: song.listen + 1
+  })
+}

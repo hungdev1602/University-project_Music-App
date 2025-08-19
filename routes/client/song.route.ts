@@ -13,6 +13,8 @@ router.get("/favorite", controller.favoriteGet)
 
 router.get("/search/:type", controller.search)
 
+router.patch("listen/:songId", controller.listenPatch)
+
 router.get("/:slugTopic", controller.listSongByTopic)
 
 

@@ -4,6 +4,7 @@ if(aPlayer){
   const dataSong = JSON.parse(aPlayer.getAttribute("data-song"))
   const singerName = aPlayer.getAttribute("data-singer")
   const rollingAvatar = document.querySelector(".inner-play .inner-avatar")
+  const listenNumber = document.querySelector(".inner-actions .inner-listen span")
 
   const ap = new APlayer({
     container: aPlayer,
@@ -21,6 +22,16 @@ if(aPlayer){
 
   ap.on("pause", () => {
     rollingAvatar.style.animationPlayState = "paused"
+  })
+
+  ap.on("ended", () => {
+    fetch(`/songs/listen/${dataSong._id}`, {
+      method: "PATCH"
+    })
+      .then(res => res.json())
+      .then(data => {
+        listenNumber.innerHTML = data.listen
+      })
   })
 }
 // Hết Tính năng phát nhạc
