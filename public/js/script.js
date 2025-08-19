@@ -90,3 +90,43 @@ if(buttonFavorite.length > 0){
   
 }
 // Hết tính năng yêu thích bài hát
+
+// Tính năng suggest khi tìm kiếm
+const inputBox = document.querySelector(`.box-search input[name="keyword"]`)
+if(inputBox){
+  inputBox.addEventListener("keyup", () => {
+    const value = inputBox.value
+    
+    fetch(`/songs/search/suggest?keyword=${value}`)
+      .then(res => res.json())
+      .then(data => {
+        if(data.code == "success"){
+          const innerList = document.querySelector(".box-search .inner-list")
+          console.log(data)
+          if(data.songs.length > 0){
+            const htmls = data.songs.map(item => {
+              return `
+                <a class="inner-item" href="/songs/detail/${item.slug}">
+                <div class="inner-image">
+                  <img src="${item.avatar}">
+                </div>
+                <div class="inner-info">
+                  <div class="inner-title">${item.title}</div>
+                  <div class="inner-singer">
+                    <i class="fa-solid fa-microphone-lines"></i> Tăng duy tân
+                  </div>
+                </div>
+              </a>
+              `
+            })
+            innerList.innerHTML = htmls.join("")
+          }
+          else{
+            innerList.innerHTML = ""
+            console.log("OK")
+          }
+        }
+      })
+  })
+}
+// Hết tính năng suggest khi tìm kiếm

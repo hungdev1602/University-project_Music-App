@@ -175,6 +175,7 @@ export const favoriteGet = async (req: Request, res: Response) => {
 }
 
 export const search = async (req: Request, res: Response) => {
+  const type = req.params.type
   const keyword = `${req.query.keyword}`
 
   let keywordRegex = keyword.trim() //bỏ khoảng trắng 2 đầu
@@ -183,8 +184,6 @@ export const search = async (req: Request, res: Response) => {
   
   const songs = await Song.find({
     slug: new RegExp(keywordRegex, "i"), //tìm theo slug
-    status: "active",
-    deleted: false
   }).select("slug avatar title like singerId")
 
 
@@ -198,9 +197,18 @@ export const search = async (req: Request, res: Response) => {
     song["singerFullName"] = infoSinger ? infoSinger.fullName : ""
   }
 
-  res.render("client/pages/songs/search", {
-    pageTitle: `Search for ${keyword}`,
-    keyword: keyword,
-    songs: songs
-  })
+  if(type === "result"){
+    res.render("client/pages/songs/search", {
+      pageTitle: `Search for ${keyword}`,
+      keyword: keyword,
+      songs: songs
+    })
+  }
+  else if(type === "suggest"){
+    res.json({
+      code: "success",
+      message: "OK",
+      songs: songs
+    })
+  }
 }

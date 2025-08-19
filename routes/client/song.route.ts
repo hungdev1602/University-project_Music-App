@@ -11,8 +11,9 @@ router.patch("/favorite", controller.favoritePatch)
 
 router.get("/favorite", controller.favoriteGet)
 
+router.get("/search/:type", controller.search)
+
 router.get("/:slugTopic", controller.listSongByTopic)
 
-router.get("/search/result", controller.search)
 
 export const songRoute = router
