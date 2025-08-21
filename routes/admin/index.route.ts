@@ -6,9 +6,9 @@ import { songRoute } from "./song.route"
 export const adminRoute = (app: Express) => {
   const adminPath = systemConfig.prefixAdmin
 
-  app.use(`/${adminPath}`, dashboardRoute)
+  app.use(`/${adminPath}/dashboard`, dashboardRoute)
 
-  app.use(`/${adminPath}`, topicRoute)
+  app.use(`/${adminPath}/topics`, topicRoute)
 
-  app.use(`/${adminPath}`, songRoute)
+  app.use(`/${adminPath}/songs`, songRoute)
 }
