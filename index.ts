@@ -10,6 +10,9 @@ const port: number = 3000
 
 // Database connect
 import { connect } from "./config/database"
+import { adminRoute } from "./routes/admin/index.route"
+import { systemConfig } from "./config/system"
+import path from "path"
 connect()
 
 // Views
@@ -27,8 +30,16 @@ app.use(bodyParser.urlencoded())
 // parse application/json
 app.use(bodyParser.json())
 
+// App local variable (in file PUG)
+app.locals.prefixAdmin = systemConfig.prefixAdmin
+
+// TinyMCE
+app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+
 //route client
 routesClient(app)
+// route admin
+adminRoute(app)
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
