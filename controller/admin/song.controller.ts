@@ -32,6 +32,9 @@ export const createGet = async (req: Request, res: Response) => {
 }
 
 export const createPost = async (req: Request, res: Response) => {
+  req.body.avatar = req.body.avatar[0]
+  req.body.audio = req.body.audio[0]
+
   const song = new Song(req.body)
   await song.save()
 
