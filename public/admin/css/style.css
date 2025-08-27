@@ -99,3 +99,7 @@
   display: none;
 }
 /* End Image Preview */
+
+audio[upload-audio-play]{
+  display: none;
+}
