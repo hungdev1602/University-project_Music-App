@@ -1,7 +1,7 @@
 import { Router } from "express"
 import * as controller from "../../controller/admin/song.controller"
 import multer from "multer"
-import { uploadFields, uploadSingle } from "../../middlewares/admin/uploadCloud.middleware"
+import { uploadFields } from "../../middlewares/admin/uploadCloud.middleware"
 
 const router: Router = Router()
 
