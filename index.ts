@@ -15,6 +15,11 @@ import { systemConfig } from "./config/system"
 import path from "path"
 connect()
 
+import methodOverride from "method-override";
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride("_method"))
+
 // Views
 app.set("views", `${__dirname}/views`); // Tìm đến thư mục tên là views
 app.set("view engine", "pug") // template engine sử dụng: pug
@@ -35,6 +40,7 @@ app.locals.prefixAdmin = systemConfig.prefixAdmin
 
 // TinyMCE
 app.use('/tinymce', express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+
 
 //route client
 routesClient(app)

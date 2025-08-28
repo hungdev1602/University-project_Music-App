@@ -18,4 +18,13 @@ router.post(
   controller.createPost
 )
 
+router.get("/edit/:id", controller.editGet)
+
+router.patch(
+  "/edit/:id", 
+  upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'audio', maxCount: 1 }]),
+  uploadFields,
+  controller.editPatch
+)
+
 export const songRoute = router

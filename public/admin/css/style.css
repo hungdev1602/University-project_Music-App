@@ -103,3 +103,7 @@
 audio[upload-audio-play]{
   display: none;
 }
+
+audio[upload-audio-play].active{
+  display: block;
+}

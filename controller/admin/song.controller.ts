@@ -40,3 +40,49 @@ export const createPost = async (req: Request, res: Response) => {
 
   res.redirect(`/${systemConfig.prefixAdmin}/songs`)
 }
+
+export const editGet = async (req: Request, res: Response) => {
+  const id = req.params.id
+
+  const song = await Song.findOne({
+    _id: id,
+    deleted: false
+  })
+
+  const topics = await Topic.find({
+    deleted: false
+  })
+
+  const singers = await Singer.find({
+    deleted: false
+  })
+  
+  res.render("admin/pages/songs/edit", {
+    pageTitle: "Chỉnh sửa bài hát",
+    song: song,
+    topics: topics,
+    singers: singers
+  })
+}
+
+export const editPatch = async (req: Request, res: Response) => {
+  console.log(req.body)
+  const id = req.params.id;
+
+  if(req.body.avatar) {
+    req.body.avatar = req.body.avatar[0];
+  }
+
+  if(req.body.audio) {
+    req.body.audio = req.body.audio[0];
+  }
+
+  await Song.updateOne({
+    _id: id,
+    deleted: false
+  }, req.body);
+
+  // Sử dụng referer thay vì "back"
+  const referer = req.get('Referer') || '/admin/songs';
+  res.redirect(referer);
+}
